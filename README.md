@@ -1,3 +1,4 @@
+# Deployed Link : https://bookmark-manager-gilt-eta.vercel.app
 # Major Technical Challenges & Solutions
 
 During the development of the Vault Bookmark Manager, several technical challenges were encountered. Below is a detailed account of these issues and the specific solutions implemented to resolve them.

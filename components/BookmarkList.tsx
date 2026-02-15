@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import { useEffect, useState, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Bookmark } from '@/types/bookmark'
 import type { RealtimeChannel } from '@supabase/supabase-js'
@@ -14,6 +14,34 @@ const BookmarkList = forwardRef<BookmarkListRef>((props, ref) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
     const supabase = createClient()
+
+    const fetchBookmarks = useCallback(async () => {
+        try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser()
+
+            if (!user) {
+                setError('You must be logged in')
+                setLoading(false)
+                return
+            }
+
+            const { data, error: fetchError } = await supabase
+                .from('bookmarks')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false })
+
+            if (fetchError) throw fetchError
+
+            setBookmarks(data || [])
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Failed to fetch bookmarks')
+        } finally {
+            setLoading(false)
+        }
+    }, [supabase])
 
     // Expose refresh method to parent component
     useImperativeHandle(ref, () => ({
@@ -46,35 +74,7 @@ const BookmarkList = forwardRef<BookmarkListRef>((props, ref) => {
         return () => {
             supabase.removeChannel(channel)
         }
-    }, [])
-
-    const fetchBookmarks = async () => {
-        try {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser()
-
-            if (!user) {
-                setError('You must be logged in')
-                setLoading(false)
-                return
-            }
-
-            const { data, error: fetchError } = await supabase
-                .from('bookmarks')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false })
-
-            if (fetchError) throw fetchError
-
-            setBookmarks(data || [])
-        } catch (err: any) {
-            setError(err.message || 'Failed to fetch bookmarks')
-        } finally {
-            setLoading(false)
-        }
-    }
+    }, [fetchBookmarks, supabase])
 
     const handleDelete = async (id: string) => {
         try {
@@ -84,8 +84,8 @@ const BookmarkList = forwardRef<BookmarkListRef>((props, ref) => {
 
             // Optimistic update - remove from UI immediately
             setBookmarks((current) => current.filter((b) => b.id !== id))
-        } catch (err: any) {
-            setError(err.message || 'Failed to delete bookmark')
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Failed to delete bookmark')
             // Refetch to restore state if delete failed
             fetchBookmarks()
         }

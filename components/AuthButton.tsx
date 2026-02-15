@@ -2,8 +2,9 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import type { Session } from '@supabase/supabase-js'
 
-export default function AuthButton({ session }: { session: any }) {
+export default function AuthButton({ session }: { session: Session | null }) {
     const router = useRouter()
     const supabase = createClient()
 

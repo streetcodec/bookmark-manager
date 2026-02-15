@@ -35,7 +35,7 @@ export default function BookmarkForm({ onBookmarkAdded }: { onBookmarkAdded?: ()
                 return
             }
 
-            const { data: newBookmark, error: insertError } = await supabase
+            const { error: insertError } = await supabase
                 .from('bookmarks')
                 .insert({
                     user_id: user.id,
@@ -55,8 +55,8 @@ export default function BookmarkForm({ onBookmarkAdded }: { onBookmarkAdded?: ()
             if (onBookmarkAdded) {
                 onBookmarkAdded()
             }
-        } catch (err: any) {
-            setError(err.message || 'Failed to add bookmark')
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Failed to add bookmark')
         } finally {
             setLoading(false)
         }

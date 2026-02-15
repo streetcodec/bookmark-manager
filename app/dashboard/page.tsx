@@ -99,11 +99,11 @@ export default function Dashboard() {
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-8 py-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <main className="flex-1 flex flex-col items-center justify-center w-full px-6 lg:px-8 py-10">
+                    <div className="flex flex-col lg:flex-row gap-12 w-full max-w-6xl items-start justify-center">
                         {/* Add Bookmark Section */}
-                        <div className="lg:col-span-4">
-                            <div className="sticky top-[100px]">
+                        <div className="w-full lg:w-[400px] shrink-0 flex flex-col p-4">
+                            <div className="sticky top-[100px]  flex flex-col p-4">
                                 <div className="glass rounded-2xl p-8 overflow-hidden relative group">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/20 transition-all duration-700" />
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Bookmarks List Section */}
-                        <div className="lg:col-span-8">
+                        <div className="flex-1 w-full min-w-0">
                             <div className="flex items-center justify-between mb-8">
                                 <h2 className="text-2xl font-display font-bold text-white flex items-center gap-3">
                                     Your Library

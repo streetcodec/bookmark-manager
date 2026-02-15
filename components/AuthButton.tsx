@@ -21,7 +21,7 @@ export default function AuthButton({ session }: { session: Session | null }) {
     }
 
     const handleSignIn = async () => {
-        const redirectTo = `${getURL()}auth/callback`
+        const redirectTo = `https://bookmark-manager-gilt-eta.vercel.app/auth/callback` // Temp fix
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {

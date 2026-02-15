@@ -62,11 +62,8 @@ const BookmarkList = forwardRef<BookmarkListRef>((props, ref) => {
                     table: 'bookmarks',
                 },
                 (payload) => {
-                    if (payload.eventType === 'INSERT') {
-                        setBookmarks((current) => [payload.new as Bookmark, ...current])
-                    } else if (payload.eventType === 'DELETE') {
-                        setBookmarks((current) => current.filter((b) => b.id !== payload.old.id))
-                    }
+                    console.log('Real-time event received:', payload)
+                    fetchBookmarks()
                 }
             )
             .subscribe()
